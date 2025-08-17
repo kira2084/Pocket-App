@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import sendIcon from "../assets/send.png";
 import back from "../assets/back.png";
 import "./Notes.css";
+import { IoSend } from "react-icons/io5";
+import { VscSend } from "react-icons/vsc";
 
 const Notesarea = (props) => {
   const [note, setNote] = useState("");
@@ -52,12 +54,19 @@ const Notesarea = (props) => {
     setGroups(newGroup);
     setNote("");
   };
-
+  const keypress = (e) => {
+    if (e.code === "Enter") {
+      handleSubmit();
+      setNote("");
+    }
+  };
+  const parts = groupSelect.groupName.trim().split(/\s+/);
+  console.log(parts[1]?.[0] || "");
   return (
     <>
       {screenSize.width < 989 ? (
         <div className="notesContainer">
-          <div className="notesHeader">
+          <div className="notesHeader" style={{ background: "rgb(0,31,139)" }}>
             <img
               src={back}
               alt={back}
@@ -69,15 +78,14 @@ const Notesarea = (props) => {
               className="notesGroup"
               style={{ background: groupSelect.color }}
             >
-              {groupSelect.groupName?.slice(0, 1)?.toUpperCase() +
-                groupSelect.groupName.split(" ")[1].toUpperCase()}
+              {parts[0][0] + (parts[1]?.[0] || "")}
             </div>
             <h2
               className="groupName
             "
+              style={{ color: "white" }}
             >
-              {groupSelect.groupName?.slice(0, 1)?.toUpperCase() +
-                groupSelect.groupName.split(" ")[1].toUpperCase()}
+              {groupSelect.groupName}
             </h2>
           </div>
           <div className="NotesAndDateMobile">
@@ -85,41 +93,46 @@ const Notesarea = (props) => {
               <div className="DateAndTextMobile">
                 <p className="TextMobile">{note.note}</p>
                 <div className="DateAndTimeMobile">
-                  <p className="TimeMobile">{note.time}</p>
                   <p className="DateMobile">{note.date}</p>
+                  <p className="TimeMobile">{note.time}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="TextareaMobile">
-            <textarea
-              className="TextInputMobile"
-              type="text"
-              value={note}
-              onChange={handleChange}
-              placeholder="Enter your text here..."
-            ></textarea>
-            {note && (
-              <img
-                src={sendIcon}
-                className="SendImgMobile"
-                alt="SendImg"
-                onClick={handleSubmit}
-              />
-            )}
+          <div className="area" style={{ backgroundColor: "rgb(0,31,139)" }}>
+            <div className="TextareaMobile">
+              <textarea
+                className="TextInputMobile"
+                type="text"
+                value={note}
+                onChange={handleChange}
+                placeholder="Enter your text here..."
+                onKeyDown={keypress}
+              ></textarea>
+              {note ? (
+                <IoSend
+                  size="20px"
+                  className="SendImgMobile"
+                  onClick={handleSubmit}
+                />
+              ) : (
+                <VscSend size="20px" className="SendImgMobile" />
+              )}
+            </div>
           </div>
         </div>
       ) : (
         <div className="notesContainer">
-          <div className="notesHeader">
+          <div className="notesHeader" style={{ background: "rgb(0,31,139)" }}>
             <div
               className="notesGroup"
               style={{ background: groupSelect.color }}
             >
-              {groupSelect.groupName?.slice(0, 1)?.toUpperCase() +
-                groupSelect.groupName.split(" ")[1].toUpperCase()}
+              {parts[0][0] + (parts[1]?.[0] || "")}
             </div>
-            <h2 className="groupName">{groupSelect.groupName}</h2>
+            <h2 className="groupName" style={{ color: "white" }}>
+              {groupSelect.groupName}
+            </h2>
           </div>
           <div className="NotesAndDate">
             {notes.map((note) => (
@@ -132,22 +145,26 @@ const Notesarea = (props) => {
               </div>
             ))}
           </div>
-          <div className="Textarea">
-            <textarea
-              className="TextInput"
-              type="text"
-              value={note}
-              onChange={handleChange}
-              placeholder="Enter your text here..."
-            ></textarea>
-            {note && (
-              <img
-                src={sendIcon}
-                className="SendImg"
-                alt="SendImg"
-                onClick={handleSubmit}
-              />
-            )}
+          <div className="area" style={{ backgroundColor: "rgb(0,31,139)" }}>
+            <div className="Textarea">
+              <textarea
+                className="TextInput"
+                type="text"
+                value={note}
+                onChange={handleChange}
+                placeholder="Enter your text here..."
+                onKeyDown={keypress}
+              ></textarea>
+              {note ? (
+                <IoSend
+                  size="30px"
+                  className="SendImg"
+                  onClick={handleSubmit}
+                />
+              ) : (
+                <VscSend size="30px" className="SendImg" />
+              )}
+            </div>
           </div>
         </div>
       )}

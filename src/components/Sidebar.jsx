@@ -65,8 +65,8 @@ const Sidebar = () => {
                       className="groupIcon"
                       style={{ background: group.color }}
                     >
-                      {group.groupName?.slice(0, 1)?.toUpperCase() +
-                        group.groupName.split(" ")[1].toUpperCase()}
+                      {group.groupName.trim().split(/\s+/)[0]?.[0] +
+                        (group.groupName.trim().split(/\s+/)[1]?.[0] || "")}
                     </div>
                     <h2 className="groupName">{group.groupName}</h2>
                   </div>
@@ -109,8 +109,8 @@ const Sidebar = () => {
                     className="groupIcon"
                     style={{ background: group.color }}
                   >
-                    {group.groupName?.slice(0, 1)?.toUpperCase() +
-                      group.groupName.split(" ")[1].toUpperCase()}
+                    {group.groupName.trim().split(/\s+/)[0]?.[0] +
+                      (group.groupName.trim().split(/\s+/)[1]?.[0] || "")}
                   </div>
                   <h2 className="groupName">{group.groupName}</h2>
                 </div>
@@ -143,7 +143,7 @@ const Sidebar = () => {
               <>
                 <div className="MessageAreaText">
                   <img src={banner} alt="banner"></img>
-                  <h2 className="MessageAreaHeading">PocketNotes</h2>
+                  <h2 className="MessageAreaHeading">Pocket Notes</h2>
                   <p className="MessageAreaDescription">
                     Send and receive messages without keeping your phone online.
                     <br /> Use Pocket Notes on up to 4 linked devices and 1

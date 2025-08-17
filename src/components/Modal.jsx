@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Modal.css";
 
 const Modal = (props) => {
-  const [formData, setFormData] = useState({ grpName: " ", color: " " });
+  const [formData, setFormData] = useState({ grpName: " ", color: "white" });
   const setGroups = props.setGroups;
   const groups = props.groups;
+  const closeModal = props.closeModal;
   const color = [
     "#B38BFA",
     "#FF79F2",
@@ -32,7 +33,6 @@ const Modal = (props) => {
   const handleChange = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData.grpName);
   };
 
   const handleChangeColor = (e) => {
@@ -42,23 +42,24 @@ const Modal = (props) => {
       [e.target.name]: e.target.getAttribute("color"),
     });
   };
+  const modalRef = useRef();
+
+  useEffect(() => {
+    // Handle outside click
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal(false); // close modal
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeModal]);
 
   const handleSubmit = () => {
-    let firstname = formData.grpName[0];
-    let secondname = formData.grpName.split(" ")[1];
-    // console.log(secondname);
-    if (firstname === " ") {
-      alert("Please enter group name or no space at starting");
-      return;
-    }
-    if (secondname === undefined) {
-      alert("Please enter group second name");
-      return;
-    }
-    if (formData.color === " ") {
-      alert("Please select a color");
-      return;
-    }
     let newGroup = [
       ...groups,
       {
@@ -71,7 +72,8 @@ const Modal = (props) => {
     //console.log(groups);
     setGroups(newGroup);
     localStorage.setItem("groups", JSON.stringify(newGroup));
-    props.closeModal(false);
+    closeModal(false);
+    //console.log(formData);
   };
 
   return (
@@ -80,14 +82,6 @@ const Modal = (props) => {
         <>
           <div className="modalBackgroundMobile">
             <div className="modalContainerMobile">
-              <span>
-                <button
-                  className="closeButtonMobile"
-                  onClick={() => props.closeModal(false)}
-                >
-                  X
-                </button>
-              </span>
               <h2 className="modalHeading">Create New Group</h2>
               <label className="modalGrp">Group Name</label>
               <input
@@ -126,14 +120,6 @@ const Modal = (props) => {
       ) : (
         <div className="modalBackground">
           <div className="modalContainer">
-            <span>
-              <button
-                className="closeButton"
-                onClick={() => props.closeModal(false)}
-              >
-                X
-              </button>
-            </span>
             <h2 className="modalHeading">Create New group</h2>
             <label className="modalGrp">Group Name</label>
             <input
